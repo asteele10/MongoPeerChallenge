@@ -1,0 +1,44 @@
+2. Find documents that have awards.
+db.bios.find("awards")
+
+3. Find documents that don't have awards.
+db.bios.find({"awards": null})
+
+4. Find documents that have contribs for OOP or UNIX.
+db.bios.find({"contribs":{$in: ["OOP", "UNIX"]}})
+
+5. Find documents with "Turing Award" awards.
+> db.bios.find({"awards":{$elemMatch:{"award":"Turing Award"}}}).pretty()
+
+6. Find documents with IDs between 3 and 7.
+db.bios.find({"_id": {$gt:3,$lt: 7}})
+
+7. Find documents with awards that were awarded before the year 2000.
+db.bios.find({"awards":{$elemMatch:{"year":{$lt:2000}}}}).pretty()
+
+8. Find documents with birth dates, but no death dates.
+db.bios.find({"birth":{$exists: true},"death":{$exists:null}}).pretty()
+
+9. Delete your least favorite scientist from the collection.
+db.bios.remove({"_id": 1})
+
+10. Add a new award entry for your most favorite scientist. Make up your award.
+db.bios.update( {_id: 3}, { $push: { awards: { $each: [{"award": "Nobel Prize", "year": 2010, "by": "The Netherlands"}], }}})
+
+11. Get the count of bios that have awards with years after 1991.
+db.bios.find({"awards":{$elemMatch:{"year":{$gt:1991}}}}).count()
+
+12. Find all records and sort by last name ascending.
+db.bios.find().sort( {"last": 1}).pretty()
+
+13. Find all records and sort by _id descending.
+db.bios.find().sort( {"_id": -1} ).pretty()
+
+14. Return the first and last name of bios that have awards granted by IEEE.
+db.bios.find({"awards":{$elemMatch:{"by":"IEEE"}}}).pretty()
+
+15. Update each document with a new field, pre_node, that is set to true.
+db.bios.update({}, {$set: {"pre_node": true}}, {upsert:false, multi:true})
+
+16. Find the first 3 records.
+db.bios.aggregate({$limit:3})
